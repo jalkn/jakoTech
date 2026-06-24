@@ -121,40 +121,40 @@ if module_select == "Substrate Audit (Amero)":
 
 elif module_select == "Media Formulation (Agar)":
     st.header("🧬 Media Formulation & Batch Rectification")
-    is_rectification = st.checkbox("Is this a Batch Rectification?")
+    is_rectification = st.checkbox("Is this a Batch Rectification?", value=True) # Checked por defecto para el proceso actual
     with st.form("agar_entry"):
         col1, col2, col3 = st.columns(3)
         with col1:
             media_id = st.text_input("Media Batch ID", value=f"AGAR_{datetime.now().strftime('%m%d_%H%M')}")
-            water_source = st.selectbox("Water Base Source", ["Pure Distilled", "Amero Decoction Extract"])
-            water_volume = st.number_input("Total Water Volume (ml)", value=600.0)
+            water_source = st.selectbox("Water Base Source", ["Pure Distilled", "Amero Decoction Extract"], index=0)
+            water_volume = st.number_input("Total Water Volume (ml)", value=500.0)
         with col2:
-            agar_mass = st.number_input("Agar-Agar Mass Added (g)", value=12.0 if not is_rectification else 7.0)
-            honey_mass = st.number_input("Pure Honey Mass (g)", value=12.0 if not is_rectification else 0.0)
-            chlorella_mass = st.number_input("Chlorella Powder Mass (g)", value=2.4 if not is_rectification else 0.0)
+            agar_mass = st.number_input("Agar-Agar Mass Added (g)", value=5.0) # Ajustado a tus 5g extras
+            honey_mass = st.number_input("Pure Honey Mass (g)", value=7.0) # Proporción de 1 cdta de miel
+            chlorella_mass = st.number_input("Chlorella Powder Mass (g)", value=0.8) # Punta de cdta (~0.8g)
         with col3:
-            container_count = st.number_input("Number of Jars", value=3)
-            vol_per_container = st.number_input("Volume per Jar (ml)", value=200.0)
-            target_strain = st.text_input("Target Strain Lineage", value="Reishi")
+            container_count = st.number_input("Number of Jars", value=24) # Ajustado a tus 24 tarros PET
+            vol_per_container = st.number_input("Volume per Jar (ml)", value=20.0) # ~20ml distribuidos por tarro
+            target_strain = st.text_input("Target Strain Lineage", value="Reishi Silvestre Clonación")
 
         col4, col5 = st.columns(2)
         with col4:
-            sterilization_time = st.number_input("Sterilization Duration (mins)", value=20 if not is_rectification else 15)
-            parent_batch_error = st.text_input("Parent Batch ID", value="None")
+            sterilization_time = st.number_input("Sterilization Duration (mins)", value=35) # Tiempo recomendado para la jarra
+            parent_batch_error = st.text_input("Parent Batch ID", value="AGAR_LIQ_FALLIDO_01")
         with col5:
             sterilization_psi = st.number_input("Sterilization Pressure (PSI)", value=15.0)
             chlorella_mix_temp = st.number_input("Chlorella Addition Temp (°C)", value=60.0)
 
-        notes = st.text_area("Notes")
+        notes = st.text_area("Notes", value="Rectificación de lote líquido previo. Se añadieron 5g de agar en polvo, miel y chlorella. Esterilizado en jarra de vidrio y vertido en frío (45°C) dentro de zona limpia en 24 tarros plásticos PET desinfectados con alcohol al 70%.")
         if st.form_submit_button("Log Media Metrics"):
             entry = {
                 "timestamp": datetime.now().isoformat(), "type": "MEDIA_BASE", "batch_id": media_id, "parent_batch": parent_batch_error,
                 "water_source": water_source, "water_vol_ml": water_volume, "agar_g": agar_mass, "honey_g": honey_mass, "chlorella_g": chlorella_mass,
                 "containers": container_count, "vol_per_container_ml": vol_per_container, "psi": sterilization_psi, "duration_min": sterilization_time,
-                "strain": target_strain, "mix_temp_c": chlorella_mix_temp, "status": "STERILIZED_READY"
+                "strain": target_strain, "mix_temp_c": chlorella_mix_temp, "status": "RECTIFIED_POURED_READY"
             }
             save_log(entry)
-            st.success(f"Logged Batch {media_id}")
+            st.success(f"Logged Rectified Batch {media_id} into 24 PET plates.")
 
 elif module_select == "Capsule Packaging (Pulsor)":
     st.header("⚡ Adaptogen Packaging Ledger")
