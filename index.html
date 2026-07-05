@@ -62,12 +62,11 @@
             transition: background-color 0.5s ease, color 0.5s ease;
         }
 
-        /* CÁMARA OSCURA / CLARA: Gradiente bio-lumínico optimizado por Hardware */
         #page-bg-overlay {
             position: fixed;
             inset: 0;
-            /* Mutación de variables dinámicas inyectadas por el motor STB */
-            background: radial-gradient(circle at 50% 30%, var(--chroma-start) 0%, var(--chroma-mid) 65%, var(--chroma-end) 100%);
+            /* CAMBIAR ESTA LÍNEA: Usa los gradientes fijos del tema en lugar de --chroma */
+            background: radial-gradient(circle at 50% 30%, var(--gradient-start) 0%, var(--gradient-mid) 65%, var(--gradient-end) 100%);
             z-index: -1;
             transform: translateZ(0);
             will-change: background;
@@ -78,11 +77,35 @@
         .glass { 
             background: var(--jako-glass);
             border: 1px solid var(--jako-border); 
-            backdrop-filter: blur(30px); 
-            -webkit-backdrop-filter: blur(30px);
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.05), inset 0 1px 0 var(--jako-border);
             transform: translateZ(0);
             transition: background 0.5s ease, border-color 0.5s ease;
+        }
+
+        /* VIDRIO HIPERREALISTA ULTRA TRANSLÚCIDO (HEADER SKELETON) */
+        header.glass { 
+            background: transparent !important;
+            border-bottom: 1px solid var(--jako-border); 
+            backdrop-filter: blur(4px); 
+            -webkit-backdrop-filter: blur(4px);
+            box-shadow: none;
+        }
+
+        /* BOTONES CENTRALES / HUD INTERACTIVOS (Esmerilado Real sobre Vidrio) */
+        .hud-btn-glass {
+            background: var(--jako-glass) !important;
+            border: 1px solid var(--jako-border);
+            backdrop-filter: blur(20px) saturate(120%);
+            -webkit-backdrop-filter: blur(20px) saturate(120%);
+            box-shadow: inset 0 1px 1px var(--jako-border), 0 4px 12px rgba(0,0,0,0.02);
+            transition: all 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        .hud-btn-glass:hover {
+            background: var(--jako-glass) !important;
+            border-color: var(--jako-text);
         }
 
         .border-custom { 
@@ -164,96 +187,94 @@
 <body class="antialiased selection:bg-jako-text selection:text-jako-bg overflow-x-hidden min-h-screen">
 
     <div id="page-bg-overlay"></div>
+<!-- HEADER OPTIMIZADO: Transparencia absoluta y estandarización HUD -->
+<header class="fixed top-0 left-0 w-full max-h-[155px] z-50 glass overflow-hidden bg-transparent">
+    <div class="w-full flex flex-col h-full justify-start bg-transparent">
         
-<!-- HEADER CORREGIDO: Altura máxima controlada para prevenir estiramiento en producción -->
-<header class="fixed top-0 left-0 w-full max-h-[155px] z-50 glass border-b border-jako-text/5 overflow-hidden">
-    <div class="w-full flex flex-col h-full justify-start">
-        
-        <!-- GRID DE 5 COLUMNAS: Forzado a alineación exacta sin depender del min-h externo -->
-        <div class="px-4 sm:px-8 grid grid-cols-[auto_auto_1fr_auto_auto] items-center uppercase tracking-widest font-mono text-[11px] text-jako-text/50 h-[65px] sm:h-[72px] min-h-[65px] sm:min-h-[72px] select-none gap-4 sm:gap-6">
+        <!-- BLOQUE 1: GRID PRINCIPAL DE CATEGORÍAS (H: 65px/72px) -->
+        <div class="px-4 sm:px-8 grid grid-cols-[85px_1fr_85px] sm:grid-cols-[130px_1fr_130px] items-center uppercase tracking-widest font-mono text-[11px] h-[65px] sm:h-[72px] min-h-[65px] sm:min-h-[72px] select-none bg-transparent">
                     
-                    <!-- 1. RETORNO (Extremo Izquierdo) -->
-                    <div class="flex items-center h-full">
-                        <button class="group flex items-center justify-center h-full transition-all duration-300 focus:outline-none cursor-pointer" aria-label="Back">
-                            <img src="img/" alt="" class="h-[13px] sm:h-[15px] w-auto object-contain opacity-65 group-hover:opacity-100 transition-all duration-500 filter invert dark:invert-0" />
-                        </button>
-                    </div>
-
-                    <!-- 2. IDIOMA / CONMUTADOR DE MATRIZ TRILÍNGÜE (Estructura de Red Compacta) -->
-                    <div class="flex items-center h-full">
-                        <button id="lang-toggle-trigger" class="group flex items-center gap-1.5 justify-center h-full transition-all duration-300 focus:outline-none cursor-pointer" title="Conmutar Idioma / Switch Language" aria-label="Toggle language">
-                            <!-- Ícono Global de Red (Inspirado en Screenshot 2026-07-03 at 6.02.03 PM.png) -->
-                            <svg class="w-3.5 h-3.5 text-jako-text opacity-40 group-hover:opacity-100 transition-all duration-500 fill-none stroke-current stroke-1" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="10"/>
-                                <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-                                <path d="M2 12h20"/>
-                            </svg>
-                            <!-- Indicador de Idioma Dinámico -->
-                            <span id="lang-indicator" class="font-mono text-[10px] font-black tracking-wider opacity-50 group-hover:opacity-100 transition-all duration-500 text-jako-text">ESP</span>
-                        </button>
-                    </div>
-                    
-                    <!-- 3. IDENTIDAD CENTRAL (Eje de Gravedad) -->
-                    <div class="text-center tracking-[0.28em] font-black drop-shadow-[0_0_12px_var(--jako-led)] text-jako-text text-[13px] sm:text-[15px] leading-none">
-                        <span>JAKO VAULT</span>
-                    </div>
-
-                    <!-- 4. INTERRUPTOR ACROMÁTICO (Cápsula Vectorial Interactiva) -->
-                    <div class="flex items-center h-full">
-                        <button id="acromatic-toggle-trigger" class="group flex items-center justify-center h-full transition-all duration-300 focus:outline-none cursor-pointer" title="Conmutar Matriz Visual" aria-label="Toggle acromatic theme">
-                            <svg class="w-[38px] sm:w-[44px] h-auto object-contain text-jako-text fill-current opacity-70 group-hover:opacity-100 transition-all duration-300 distribution-gpu" viewBox="0 0 54 28" xmlns="http://www.w3.org/2000/svg">
-                                <!-- Cuerpo de la Cápsula -->
-                                <rect width="54" height="28" rx="14" />
-                                <!-- Contenedor Deslizable del Lente -->
-                                <g class="transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]" style="transform: var(--toggle-handle-transform);">
-                                    <circle cx="11" cy="11" r="11" class="fill-current text-jako-bg" />
-                                </g>
-                            </svg>
-                        </button>
-                    </div>
-                    
-                    <!-- 5. FLUJO BIOCINÉTICO (Extremo Derecho) -->
-                    <div class="flex items-center h-full">
-                        <button class="group flex items-center justify-center h-full transition-all duration-300 focus:outline-none cursor-pointer" aria-label="Pace">
-                            <img src="img/" alt="" class="h-[13px] sm:h-[15px] w-auto object-contain opacity-65 group-hover:opacity-100 transition-all duration-500 filter invert dark:invert-0" />
-                        </button>
-                    </div>
-
-                </div>
-
-
-                <div class="w-full flex flex-col bg-jako-text/[0.01]">
-                    
-                    <div class="w-full grid grid-cols-3 items-center justify-between px-3 sm:px-8 h-12 gap-2 sm:gap-4 text-center select-none">
-                        
-                        <div id="sub-sets-solar-trigger" class="flex flex-col-reverse items-start text-left cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
-                            <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">Hz</span>
-                            <span id="sub-sets-solar" class="font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[10px] sm:text-[12px] font-bold text-jako-text drop-shadow-[0_0_8px_var(--jako-led)] standard-num">0.00</span>
-                        </div>
-
-                        <div id="z-dial-trigger" class="flex flex-col-reverse items-center text-center cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
-                            <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">Dial</span>
-                            <span id="z-dial-mirror" class="font-mono tracking-[0.15em] text-[10px] sm:text-[12px] font-black text-jako-text drop-shadow-[0_0_10px_var(--jako-led)]">0PU0</span>
-                        </div>
-
-                        <div id="sub-reps-tension-trigger" class="flex flex-col-reverse items-end text-right cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
-                            <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">Tensión</span>
-                            <span id="sub-reps-tension" class="font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[10px] sm:text-[12px] font-bold text-jako-text drop-shadow-[0_0_8px_var(--jako-led)] standard-num">0.0</span>
-                        </div>
-
-                    </div>
-
-                    <!-- TELEMETRÍA HEADER HIPERREALISTA (CORREGIDO SIN FONDO OPACO) -->
-                    <div class="w-full flex items-center justify-center px-4 h-8 border-t border-jako-border from-jako-text/[0.02] to-transparent">
-                        <span id="panel-telemetry-data-secondary" class="text-[8.5px] xs:text-[9.5px] sm:text-[10px] text-center tracking-[0.18em] xs:tracking-[0.25em] sm:tracking-[0.35em] text-jako-text/70 font-medium transition-all duration-300 truncate max-w-full leading-none uppercase select-none">
-                            ONDA BIOCINÉTICA REGENERATIVA
-                        </span>
-                    </div>
-
-                </div>
-
+            <!-- Izquierda: Idioma (Sin background, solo ícono/texto) -->
+            <div class="flex items-center justify-start h-full bg-transparent">
+                <button id="lang-toggle-trigger" class="group flex items-center gap-1.5 h-full transition-all duration-300 focus:outline-none cursor-pointer bg-transparent border-none p-0" title="Conmutar Idioma">
+                    <svg class="w-3.5 h-3.5 text-jako-text opacity-40 group-hover:opacity-100 transition-all duration-500 fill-none stroke-current stroke-1" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        <path d="M2 12h20"/>
+                    </svg>
+                    <span id="lang-indicator" class="font-mono text-[10px] font-black tracking-wider opacity-50 group-hover:opacity-100 transition-all duration-500 text-jako-text">ESP</span>
+                </button>
             </div>
-        </header>
+
+            <!-- Centro: Menú Global Dinámico (Tipo agua/esmerilado sobre vidrio) -->
+            <div class="grid grid-cols-[24px_1fr_24px] sm:grid-cols-[32px_1fr_32px] gap-1 h-8 w-full items-center max-w-[180px] sm:max-w-xs mx-auto hud-btn-glass rounded px-1">
+                <button id="btn-variant-prev" class="h-full flex items-center justify-center text-jako-text/30 hover:text-jako-text transition-all focus:outline-none cursor-pointer bg-transparent border-none">
+                    <span class="text-[11px] font-black">&lt;</span>
+                </button>
+                <div id="menu-bio-DYNAMIC-holder" class="h-full w-full flex items-center justify-center text-center select-none overflow-hidden group bg-transparent"></div>
+                <button id="btn-variant-next" class="h-full flex items-center justify-center text-jako-text/30 hover:text-jako-text transition-all focus:outline-none cursor-pointer bg-transparent border-none">
+                    <span class="text-[11px] font-black">&gt;</span>
+                </button>
+            </div>
+
+            <!-- Derecha: Switch Acromático (Sin background, solo ícono toggle) -->
+            <div class="flex items-center justify-end h-full bg-transparent">
+                <button id="acromatic-toggle-trigger" class="group flex items-center justify-center h-full transition-all duration-300 focus:outline-none cursor-pointer bg-transparent border-none p-0" title="Conmutar Matriz Visual">
+                    <svg class="w-[38px] sm:w-[44px] h-auto object-contain text-jako-text fill-current opacity-40 group-hover:opacity-100 transition-all duration-300" viewBox="0 0 54 28">
+                        <rect width="54" height="28" rx="14" />
+                        <g class="transition-transform duration-300 ease-[cubic-bezier(0.25,1,0.5,1)]" style="transform: var(--toggle-handle-transform);">
+                            <circle cx="11" cy="11" r="11" class="fill-current text-jako-bg" />
+                        </g>
+                    </svg>
+                </button>
+            </div>
+        </div>
+
+        <!-- BLOQUE 2: TELEMETRÍA DE SUB-VARIANTES INTEGRADA (H: 48px) -->
+        <div class="w-full flex flex-col bg-transparent border-t border-jako-text/5">
+            <div class="w-full grid grid-cols-[85px_1fr_85px] sm:grid-cols-[130px_1fr_130px] items-center justify-between px-4 sm:px-8 h-12 select-none bg-transparent">
+                
+                <!-- CMS (Izquierda - Botón HUD Esmerilado) -->
+                <div class="flex items-center justify-start h-full py-1.5 bg-transparent">
+                    <button id="telemetry-product-dim-trigger" class="group flex flex-col-reverse items-start text-left px-2 sm:px-3 h-full w-full justify-center hud-btn-glass rounded focus:outline-none cursor-pointer">
+                        <span class="text-[7px] sm:text-[8px] tracking-[0.15em] text-jako-text/30 group-hover:text-jako-text/60 mt-0.5 uppercase font-mono leading-none">CMS ↗</span>
+                        <span id="telemetry-product-dim" class="font-mono tracking-[0.05em] text-[9px] sm:text-[10px] font-bold text-jako-text/80 group-hover:text-jako-text">--</span>
+                    </button>
+                </div>
+
+                <!-- Variantes Específicas del Item Seleccionado (Centro - Botón HUD Esmerilado) -->
+                <div class="grid grid-cols-[24px_1fr_24px] sm:grid-cols-[32px_1fr_32px] gap-1 h-8 w-full items-center max-w-[180px] sm:max-w-xs mx-auto hud-btn-glass rounded px-1">
+                    <button id="btn-header-variant-prev" class="h-full flex items-center justify-center text-jako-text/30 hover:text-jako-text transition-all focus:outline-none cursor-pointer bg-transparent border-none">
+                        <span class="text-[11px] font-black">&lt;</span>
+                    </button>
+                    <div id="menu-bio-DYNAMIC-holder-header" class="h-full w-full flex items-center justify-center text-center select-none overflow-hidden group bg-transparent"></div>
+                    <button id="btn-header-variant-next" class="h-full flex items-center justify-center text-jako-text/30 hover:text-jako-text transition-all focus:outline-none cursor-pointer bg-transparent border-none">
+                        <span class="text-[11px] font-black">&gt;</span>
+                    </button>
+                </div>
+
+                <!-- DIALS (Derecha - Botón HUD Esmerilado) -->
+                <div class="flex items-center justify-end h-full py-1.5 bg-transparent">
+                    <button id="telemetry-product-dial-trigger" class="group flex flex-col-reverse items-end text-right px-2 sm:px-3 h-full w-full justify-center hud-btn-glass rounded focus:outline-none cursor-pointer">
+                        <span class="text-[7px] sm:text-[8px] tracking-[0.15em] text-jako-text/30 group-hover:text-jako-text/60 mt-0.5 uppercase font-mono leading-none">↖ DIALS</span>
+                        <span id="telemetry-product-dial" class="font-mono tracking-[0.05em] text-[9px] sm:text-[10px] font-bold text-jako-text/80 group-hover:text-jako-text">--</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- BARRA DE COMPRA COMUNIDAD (HUD Esmerilado Estabilizado) -->
+        <div class="w-full flex items-center justify-center px-4 h-8 border-t border-jako-border bg-transparent">
+            <div class="hud-btn-glass rounded-sm h-[20px] px-4 flex items-center justify-center max-w-[90%] md:max-w-xl">
+                <span id="panel-telemetry-data" class="text-[8.5px] xs:text-[9.5px] sm:text-[10px] text-center tracking-[0.18em] xs:tracking-[0.25em] text-jako-text/70 font-medium truncate uppercase select-none leading-none">
+                    Tu compra financia una onda para la comunidad
+                </span>
+            </div>
+        </div>
+
+    </div>
+</header>
+
 
 <main id="main-vault" class="w-full flex-1 flex flex-col justify-center items-center pt-[155px] pb-[195px] min-h-screen relative overflow-hidden"> 
     <div class="w-full flex flex-col items-center justify-center p-4 sm:p-6 select-none relative z-10">
@@ -297,56 +318,54 @@
 </main>
 
 <footer id="dynamic-footer" class="fixed bottom-0 left-0 w-full z-30 glass border-t border-jako-text/5 transition-opacity duration-500 select-none transform translateZ(0) overflow-hidden">
-    <div class="w-full flex flex-col h-full justify-start">
-            <div class="w-full flex items-center justify-center px-4 h-8 border-t border-jako-border from-jako-text/[0.02] to-transparent">
-                <span id="panel-telemetry-data" class="text-[8.5px] xs:text-[9.5px] sm:text-[10px] text-center tracking-[0.18em] xs:tracking-[0.25em] sm:tracking-[0.35em] text-jako-text/70 font-medium transition-all duration-300 truncate max-w-full leading-none uppercase select-none">
-                    Compras tu pieza y financias otra para la comunidad
-                </span>
-            </div>
 
+                <div class="w-full flex flex-col bg-jako-text/[0.01]">
 
-            <!-- TELEMETRÍA FOOTER HIPERREALISTA -->
-            <div class="w-full flex flex-col bg-jako-text/[0.01]">
-                <div class="w-full grid grid-cols-5 items-center justify-between px-3 sm:px-8 h-12 gap-2 sm:gap-4 text-center select-none">
+                    <!-- TELEMETRÍA HEADER HIPERREALISTA (CORREGIDO SIN FONDO OPACO) -->
+                    <div class="w-full flex items-center justify-center px-4 h-8 border-t border-jako-border from-jako-text/[0.02] to-transparent">
+                        <span id="panel-telemetry-data-secondary" class="text-[8.5px] xs:text-[9.5px] sm:text-[10px] text-center tracking-[0.18em] xs:tracking-[0.25em] sm:tracking-[0.35em] text-jako-text/70 font-medium transition-all duration-300 truncate max-w-full leading-none uppercase select-none">
+                            ONDA BIOCINÉTICA REGENERATIVA
+                        </span>
+                    </div>
                     
-                    <div id="telemetry-product-dim-trigger" class="flex flex-col-reverse items-start text-left cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
-                        <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">CMS</span>
-                        <span id="telemetry-product-dim" class="font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[10px] sm:text-[12px] font-bold text-jako-text/90">--</span>
+                    <div class="w-full grid grid-cols-3 items-center justify-between px-3 sm:px-8 h-12 gap-2 sm:gap-4 text-center select-none">
+                        
+                        <div id="sub-sets-solar-trigger" class="flex flex-col-reverse items-start text-left cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
+                            <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">Hz</span>
+                            <span id="sub-sets-solar" class="font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[10px] sm:text-[12px] font-bold text-jako-text drop-shadow-[0_0_8px_var(--jako-led)] standard-num">0.00</span>
+                        </div>
+
+                        <div id="z-dial-trigger" class="flex flex-col-reverse items-center text-center cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
+                            <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">Dial</span>
+                            <span id="z-dial-mirror" class="font-mono tracking-[0.15em] text-[10px] sm:text-[12px] font-black text-jako-text drop-shadow-[0_0_10px_var(--jako-led)]">0PU0</span>
+                        </div>
+
+                        <div id="sub-reps-tension-trigger" class="flex flex-col-reverse items-end text-right cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
+                            <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">Tensión</span>
+                            <span id="sub-reps-tension" class="font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[10px] sm:text-[12px] font-bold text-jako-text drop-shadow-[0_0_8px_var(--jako-led)] standard-num">0.0</span>
+                        </div>
+
                     </div>
 
-                    <div class="col-span-3 grid grid-cols-[24px_1fr_24px] sm:grid-cols-[32px_1fr_32px] gap-1 h-full w-full items-center max-w-xs mx-auto">
-                        <button id="btn-variant-prev" class="h-8 flex items-center justify-center text-jako-text/20 hover:text-jako-text/50 hover:bg-jako-text/[0.02] rounded transition-all focus:outline-none">
-                            <span class="text-[10px] font-bold">&lt;</span>
-                        </button>
-                        
-                        <div id="menu-bio-DYNAMIC-holder" class="h-full w-full flex items-center justify-center cursor-pointer group"></div>
-                        
-                        <button id="btn-variant-next" class="h-8 flex items-center justify-center text-jako-text/20 hover:text-jako-text/50 hover:bg-jako-text/[0.02] rounded transition-all focus:outline-none">
-                            <span class="text-[10px] font-bold">&gt;</span>
-                        </button>
-                    </div>
 
-                    <div id="telemetry-product-dial-trigger" class="flex flex-col-reverse items-end text-right cursor-pointer text-jako-text/60 hover:text-jako-text transition-colors duration-200 h-full justify-center">
-                        <span class="text-[7.5px] sm:text-[8.5px] tracking-[0.15em] sm:tracking-[0.2em] text-jako-text/30 mt-0.5 uppercase font-mono leading-none">Dials</span>
-                        <span id="telemetry-product-dial" class="font-mono tracking-[0.1em] sm:tracking-[0.15em] text-[10px] sm:text-[12px] font-bold text-jako-text/90">--</span>
-                    </div>
 
                 </div>
-            </div>
 
-<!-- FILA DE ACCIONES PRINCIPALES (SÍN LÍNEAS VERTICALES) -->
+
+
+<!-- FILA DE ACCIONES PRINCIPALES (UNIFICADA / ESTÉTICA HUD) -->
 <div class="w-full h-12 relative z-10 border-jako-border bg-jako-text/[0.01]">
     <div class="w-full grid grid-cols-3 items-center h-full text-center select-none">
         
-        <button id="btn-reveal-raw" class="h-full w-full bg-transparent hover:bg-jako-text/[0.02] text-jako-text/40 hover:text-jako-text font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 focus:outline-none" aria-label="Alternar Capas Visuales">
+        <button id="btn-reveal-raw" class="h-full w-full bg-transparent hover:bg-jako-text/[0.04] text-jako-text/40 hover:text-jako-text font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 focus:outline-none" aria-label="Alternar Capas Visuales">
             VER
         </button>
         
-        <button id="btn-adquirir-nodo" onclick="adquirirNodo()" class="h-full w-full bg-transparent hover:bg-jako-text/[0.04] text-jako-text/90 font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 focus:outline-none">
+        <button id="btn-adquirir-nodo" onclick="adquirirNodo()" class="h-full w-full bg-transparent hover:bg-jako-text/[0.04] text-jako-text/40 hover:text-jako-text font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 focus:outline-none" aria-label="Activar Nodo">
             ACTIVAR
         </button>
         
-        <button id="btn-reveal-dial" class="h-full w-full bg-transparent hover:bg-jako-text/[0.02] text-jako-text/40 hover:text-jako-text font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 focus:outline-none">
+        <button id="btn-reveal-dial" class="h-full w-full bg-transparent hover:bg-jako-text/[0.04] text-jako-text/40 hover:text-jako-text font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] transition-all duration-300 focus:outline-none" aria-label="Alternar Dial">
             DIAL
         </button>
         
@@ -358,18 +377,13 @@
                 <div class="w-full h-full px-4 sm:px-8 grid grid-cols-[auto_auto_1fr_auto_auto] items-center uppercase tracking-[0.3em] sm:tracking-[0.4em] font-mono text-[8px] text-jako-text/20 select-none gap-4 sm:gap-6">
                     
                     <!-- 1. DISPARADOR INFERIOR IZQUIERDO (Selector Cromático STB) -->
-                    <div class="flex items-center h-full">
-                        <button id="footer-fn-left-trigger" class="group flex items-center justify-center h-full transition-all duration-300 focus:outline-none cursor-pointer" aria-label="Conmutar Espectro Cromático">
-                            <svg class="w-3.5 h-3.5 text-jako-text opacity-20 group-hover:opacity-80 transition-all duration-500 fill-none stroke-current stroke-1.5" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="10" stroke-dasharray="3 3" />
-                                <circle cx="12" cy="12" r="4" class="fill-current opacity-30" />
-                            </svg>
-                        </button>
+                    <div class="flex items-center h-full text-jako-text/30 font-black tracking-wider text-[9px] min-w-[24px]">
+                        
                     </div>
 
                     <!-- 2. MARCADOR DE ESTADO INTERNO IZQUIERDO -->
                     <div class="flex items-center h-full text-jako-text/30 font-black tracking-wider text-[9px] min-w-[24px]">
-                        <span id="footer-chroma-indicator">STB</span>
+                        
                     </div>
                     
                     <!-- 3. IDENTIDAD CENTRAL DE FIRMA -->
@@ -379,7 +393,7 @@
 
                     <!-- 4. MARCADOR DE ESTADO INTERNO DERECHO -->
                     <div class="flex items-center h-full text-jako-text/30 font-black tracking-wider text-[9px]">
-                        <span class="font-mono">RAW</span>
+                        
                     </div>
 
                     <!-- 5. DISPARADOR INFERIOR DERECHO (Modo Inmersión Zenith con Ícono de Expansión HUD) -->
@@ -397,73 +411,261 @@
     </footer>
 
 <script>
-    const ARTEPANEL_CATALOG = {
-        'STENCIL': {
-            defaultVariant: '25X25',
-            variants: {
-                '25X25': { 
-                    label: 'STENCIL25X25', 
-                    desc: 'Stencil para murales participativos en interiores y exteriores.', 
-                    spec: 'Compras tu pieza y financias otra para la comunidad', 
-                    price: '$12USD', 
-                    id: 'ST-25X25',
-                    img: 'img/surface.png', imgBack: 'img/20x20B.png', imgRaw: 'img/stencil25B.png',
-                    telemetry: { DIM: '25x25', MEDIA: 'STENCIL', DIAL: '⧗240', RATE: '$0.05USD' }
-                },
-                '40X40': { 
-                    label: 'MICROSTENCIL FOCUS', 
-                    desc: 'Stencil para murales participativos en interiores y exteriores.', 
-                    spec: 'Compras tu pieza y financias otra para la comunidad', 
-                    price: '$29USD', 
-                    id: 'ST-MICRO',
-                    img: 'img/surface.png', imgBack: 'img/20x20B.png', imgRaw: 'img/microB.png',
-                    telemetry: { DIM: '40x40', MEDIA: 'STENCIL', DIAL: '⧗240', RATE: '$0.05USD' }
-                },
-                '80X80': { 
-                    label: 'MACROSTENCIL SURGE', 
-                    desc: 'Stencil para murales participativos en interiores y exteriores.', 
-                    spec: 'Compras tu pieza y financias otra para la comunidad', 
-                    price: '$125USD', 
-                    id: 'ST-MACRO',
-                    img: 'img/surface.png', imgBack: 'img/20x20B.png', imgRaw: 'img/macroB.png',
-                    telemetry: { DIM: '80x80', MEDIA: 'STENCIL', DIAL: '⧗2500', RATE: '$0.05USD' }
-                }
-            }
-        },
+    // =========================================================================
+    // SOURCE OF TRUTH: JAKO UNIFIED BIOMATRIC CATALOG (CHRONOLOGICAL EVOLUTION)
+    // =========================================================================
+    const JAKO_CATALOG = {
+
+        // ---------------------------------------------------------------------
+        // FASE 1: ARTE (DESPERTAR) - Resonancia en la sociedad, materialización de Dials
+        // ---------------------------------------------------------------------
         'PANEL': {
             defaultVariant: '40X40',
             variants: {
                 '20X20': { 
                     label: 'PANEL20X20', 
                     desc: 'INKJET ADH sobre ACM para montajes individuales o mosaicos.', 
-                    spec: 'Compras tu pieza y financias otra para la comunidad', 
-                    price: '$12USD', 
+                    spec: 'Tu compra financia ondas a la comunidad', 
                     id: 'FP-20X20',
                     img: 'img/surface.png', imgBack: 'img/20x20B.png', imgRaw: 'img/panel20B.png',
-                    telemetry: { DIM: '20x20', MEDIA: 'ACM', DIAL: '⧗240', RATE: '$0.05USD' }
+                    telemetry: { DIM: '20x20', MEDIA: 'ACM', DIAL: '⧗240', RATE: '$0.05USD' },
+                    _metaPrice: '$12USD'
                 },
                 '30X30': { 
                     label: 'PANEL30X30', 
                     desc: 'INKJET ADH sobre ACM para montajes individuales o mosaicos.', 
-                    spec: 'Compras tu pieza y financias otra para la comunidad', 
-                    price: '$29USD', 
+                    spec: 'Tu compra financia ondas a la comunidad', 
                     id: 'FP-30X30',
                     img: 'img/surface.png', imgBack: 'img/panel30W.png', imgRaw: 'img/panel30B.png',
-                    telemetry: { DIM: '30x30', MEDIA: 'ACM', DIAL: '⧗576', RATE: '$0.05USD' }
+                    telemetry: { DIM: '30x30', MEDIA: 'ACM', DIAL: '⧗576', RATE: '$0.05USD' },
+                    _metaPrice: '$29USD'
                 },
                 '40X40': { 
                     label: 'PANEL40X40', 
                     desc: 'INKJET ADH sobre ACM para montajes individuales o mosaicos.', 
-                    spec: 'Compras tu pieza y financias otra para la comunidad', 
-                    price: '$55USD', 
+                    spec: 'Tu compra financia ondas a la comunidad', 
                     id: 'FP-40X40',
                     img: 'img/surface.png', imgBack: 'img/panel40W.png', imgRaw: 'img/panel40B.png',
-                    telemetry: { DIM: '40x40', MEDIA: 'ACM', DIAL: '⧗1100', RATE: '$0.05USD' }
+                    telemetry: { DIM: '40x40', MEDIA: 'ACM', DIAL: '⧗1100', RATE: '$0.05USD' },
+                    _metaPrice: '$55USD'
+                }
+            }
+        },
+        'STENCIL': {
+            defaultVariant: '25X25',
+            variants: {
+                '25X25': { 
+                    label: 'STENCIL25X25', 
+                    desc: 'Stencil para murales participativos en interiores y exteriores.', 
+                    spec: 'Tu compra financia ondas a la comunidad', 
+                    id: 'ST-25X25',
+                    img: 'img/surface.png', imgBack: 'img/20x20B.png', imgRaw: 'img/stencil25B.png',
+                    telemetry: { DIM: '25x25', MEDIA: 'STENCIL', DIAL: '⧗240', RATE: '$0.05USD' },
+                    _metaPrice: '$12USD'
+                },
+                '40X40': { 
+                    label: 'MICROSTENCIL FOCUS', 
+                    desc: 'Stencil para murales participativos en interiores y exteriores.', 
+                    spec: 'Tu compra financia ondas a la comunidad', 
+                    id: 'ST-MICRO',
+                    img: 'img/surface.png', imgBack: 'img/20x20B.png', imgRaw: 'img/microB.png',
+                    telemetry: { DIM: '40x40', MEDIA: 'STENCIL', DIAL: '⧗240', RATE: '$0.05USD' },
+                    _metaPrice: '$29USD'
+                },
+                '80X80': { 
+                    label: 'MACROSTENCIL SURGE', 
+                    desc: 'Stencil para murales participativos en interiores y exteriores.', 
+                    spec: 'Tu compra financia ondas a la comunidad', 
+                    id: 'ST-MACRO',
+                    img: 'img/surface.png', imgBack: 'img/20x20B.png', imgRaw: 'img/macroB.png',
+                    telemetry: { DIM: '80x80', MEDIA: 'STENCIL', DIAL: '⧗2500', RATE: '$0.05USD' },
+                    _metaPrice: '$125USD'
+                }
+            }
+        },
+        'AERONEX': {
+            defaultVariant: '1_HOUR',
+            variants: {
+                '1_HOUR': {
+                    label: 'AERONEX CHRONOS 1H',
+                    desc: 'Captura aérea biocinética de alta resolución para terrenos o estructuras.',
+                    spec: 'DJI MAVIC TELEMETRY',
+                    id: 'AN-01H',
+                    img: 'img/drone-front.png', imgBack: 'img/drone-back.png', imgRaw: 'img/drone-raw.png',
+                    telemetry: { DIM: '1 HORA', MEDIA: 'DRONE FLY', DIAL: '⧗FLIGHT', RATE: '4K_60FPS' },
+                    benefits: ['FOTOGRAMETRÍA BÁSICA', 'RECONOCIMIENTO DE TERRENO', 'DINÁMICA CINEMÁTICA', 'ÓPTICA DE PRECISIÓN'],
+                    _metaPrice: '$180.000'
+                },
+                '2_HOURS': {
+                    label: 'AERONEX MATRIX 2H',
+                    desc: 'Mapeo y cinematografía aérea extendida orientada a bio-renovación y diseño.',
+                    spec: 'DJI MAVIC TELEMETRY',
+                    id: 'AN-02H',
+                    img: 'img/drone-front.png', imgBack: 'img/drone-back.png', imgRaw: 'img/drone-raw.png',
+                    telemetry: { DIM: '2 HORAS', MEDIA: 'DRONE FLY', DIAL: '⧗FLIGHT', RATE: '4K_RAW' },
+                    benefits: ['COBERTURA MULTI-ÁNGULO', 'SEGUIMIENTO BIOMÉTRICO', 'ANÁLISIS ESPACIAL ORTO', 'MONTAJE CRUDO INCLUIDO'],
+                    _metaPrice: '$320.000'
+                },
+                '4_HOURS': {
+                    label: 'AERONEX VECTOR 4H',
+                    desc: 'Bloque de media jornada para escaneo cinemático profundo y dirección de arte.',
+                    spec: 'DJI MAVIC TELEMETRY',
+                    id: 'AN-04H',
+                    img: 'img/drone-front.png', imgBack: 'img/drone-back.png', imgRaw: 'img/drone-raw.png',
+                    telemetry: { DIM: '4 HORAS', MEDIA: 'DRONE FLY', DIAL: '⧗VERTICAL', RATE: '5.1K_RAW' },
+                    benefits: ['SCANNING DE ALTA DENSIDAD', 'EDICIÓN CINEMÁTICA CORE', 'TELEMETRÍA DE PAISAJE', 'DIRECCIÓN DE ARTE COMPLETA'],
+                    _metaPrice: '$600.000'
+                },
+                '6_HOURS': {
+                    label: 'AERONEX QUANTUM 6H',
+                    desc: 'Inmersión total de captura aérea y mapeo masivo para proyectos macro de bio-diseño.',
+                    spec: 'DJI MAVIC TELEMETRY',
+                    id: 'AN-06H',
+                    img: 'img/drone-front.png', imgBack: 'img/drone-back.png', imgRaw: 'img/drone-raw.png',
+                    telemetry: { DIM: '6 HORAS', MEDIA: 'DRONE FLY', DIAL: '⧗QUANTUM', RATE: 'MAX_BITRATE' },
+                    benefits: ['MONITORIZACIÓN COMPLETA', 'ENTREGA DE ACTS RAW/LOG', 'ORTOMOSAICOS PREMIUM', 'SOPORTE POST-PRODUCCIÓN'],
+                    _metaPrice: '$850.000'
+                }
+            }
+        },
+
+        // ---------------------------------------------------------------------
+        // FASE 2: CUERPO (REFLEJAR) - Activación de la Pulsor App y educación kinética
+        // ---------------------------------------------------------------------
+        'PULSWARE': {
+            defaultVariant: 'HOODIE',
+            variants: {
+                'HOODIE': {
+                    label: 'JAKO CORE HOODIE',
+                    desc: 'Saco pesado premium estructurado para protección térmica y movilidad kinética.',
+                    spec: 'HEAVY COTTON ARMOR',
+                    id: 'JG-HD-BLK',
+                    img: 'img/hoodie-front.png', imgBack: 'img/hoodie-back.png', imgRaw: 'img/hoodie-raw.png',
+                    telemetry: { DIM: 'OVERSIZE', MEDIA: 'TEXTILE', DIAL: 'P.U.L.S.', RATE: '400GSM' },
+                    benefits: ['PROTECCIÓN TÉRMICA EFICIENTE', 'CORTE ERGONÓMICO RESISTENTE', 'ALTA DENSIDAD ESTRUCTURAL', 'RESISTENCIA MECÁNICA'],
+                    _metaPrice: '$160.000'
+                },
+                'CAPS': {
+                    label: 'JAKO KINETIC CAP',
+                    desc: 'Gorra táctica estructurada para blindaje solar durante entrenamientos de alta intensidad.',
+                    spec: 'RESPIRABLE MESH TECH',
+                    id: 'JG-CP-BLK',
+                    img: 'img/cap-front.png', imgBack: 'img/cap-back.png', imgRaw: 'img/cap-raw.png',
+                    telemetry: { DIM: 'ADJUSTABLE', MEDIA: 'GEAR', DIAL: 'P.U.L.S.', RATE: 'LIGHTWEIGHT' },
+                    benefits: ['VENTILACIÓN HIDRÓFOBA', 'AJUSTE ANATÓMICO EXACTO', 'PROYECCIÓN VISUAL ÓPTIMA', 'SECADO ULTRA RÁPIDO'],
+                    _metaPrice: '$65.000'
+                },
+                'STRAPS': {
+                    label: 'JAKO CALISTHENICS GRIPS',
+                    desc: 'Calleras/Straps de alta resistencia para protección palmar en tracciones críticas.',
+                    spec: 'CARBON FIBER GRIP LAYER',
+                    id: 'JG-ST-PAIR',
+                    img: 'img/straps-front.png', imgBack: 'img/straps-back.png', imgRaw: 'img/straps-raw.png',
+                    telemetry: { DIM: 'ONE SIZE', MEDIA: 'HARDWARE', DIAL: 'P.U.L.S.', RATE: 'MAX-FRICTION' },
+                    benefits: ['BLINDAJE PALMAR AVANZADO', 'CIERRE DE NEOPRENO ERGO', 'ADHERENCIA SOBRE ACERO', 'REDUCCIÓN DE FATIGA GRIP'],
+                    _metaPrice: '$75.000'
+                },
+                'SPEED_ROPES': {
+                    label: 'JAKO RESISTANCE ROPE',
+                    desc: 'Cuerda de alta velocidad con rodamientos fluidos optimizada para cadencia cinética.',
+                    spec: 'BEARING SYSTEM V4',
+                    id: 'JG-SR-KINETIC',
+                    img: 'img/rope-front.png', imgBack: 'img/rope-back.png', imgRaw: 'img/rope-raw.png',
+                    telemetry: { DIM: '3.0 METERS', MEDIA: 'HARDWARE', DIAL: 'P.U.L.S.', RATE: 'HIGH-VELOCITY' },
+                    benefits: ['RODAMIENTO DE FLUIDO ACELERADO', 'CABLE DE ACERO RECUBIERTO', 'AJUSTE DE LONGITUD EXPRESS', 'CADENCIA RÍTMICA PURA'],
+                    _metaPrice: '$55.000'
+                }
+            }
+        },
+
+        // ---------------------------------------------------------------------
+        // FASE 3: SYNERGY / ZENERGY (RESONANCIA) - Materialización del micelio y bioconstrucción
+        // ---------------------------------------------------------------------
+        'PULSOR': {
+            defaultVariant: 'FOCUS',
+            variants: {
+                'FOCUS': { 
+                    label: 'PULSOR FOCUS', 
+                    desc: 'Enfoque y claridad cognitiva', 
+                    spec: 'LION’S MANE', 
+                    id: 'PULS45F',
+                    img: 'img/45caps.png', imgBack: 'img/45mane.png', imgRaw: 'img/maneRaw.png',
+                    telemetry: { DIM: '45 CAPS', MEDIA: 'MUSHROOM', DIAL: 'P.U.L.S.', RATE: '500MGRS' },
+                    benefits: ['NEUROGÉNESIS', 'CLARIDAD COGNITIVA', 'MEMORIA FLUIDA', 'NIEBLA  (-)', 'OPTIMIZACIÓN SINÁPTICA', 'ENFOQUE PROFUNDO', 'AGUDEZA ', 'REPARACIÓN NEURONAL', 'ENFOQUE', 'PRODUCTIVIDAD SOSTENIDA'],
+                    _metaPrice: '$70.000'
+                },
+                'ZEN': { 
+                    label: 'PULSOR ZEN', 
+                    desc: 'Silencio mental óptimo', 
+                    spec: 'REISHI', 
+                    id: 'PULS45Z',
+                    img: 'img/45caps.png', imgBack: 'img/45reishi.png', imgRaw: 'img/reishiRaw.png',
+                    telemetry: { DIM: '45 CAPS', MEDIA: 'MUSHROOM', DIAL: 'P.U.L.S.', RATE: '500MGRS' },
+                    benefits: ['REDUCCIÓN CORTISOL', 'CALMA PROFUNDA', 'REGULACIÓN NERVIOSA', 'DESCANSO REPARADOR', 'EQUILIBRIO ', 'ADAPTACIÓN AL ESTRÉS', 'PAZ COGNITIVA', 'SUEÑO LÚCIDO', 'RELAJACIÓN MUSCULAR', 'CLARIDAD INTERNA'],
+                    _metaPrice: '$70.000'
+                },
+                'STAMINA': { 
+                    label: 'PULSOR STAMINA', 
+                    desc: 'Potencia celular óptima', 
+                    spec: 'CORDYCEPS', 
+                    id: 'PULS45S',
+                    img: 'img/45caps.png', imgBack: 'img/45cordy.png', imgRaw: 'img/cordyRaw.png',
+                    telemetry: { DIM: '45 CAPS', MEDIA: 'MUSHROOM', DIAL: 'P.U.L.S.', RATE: '500MGRS' },
+                    benefits: ['POTENCIA AERÓBICA', 'ENERGÍA CELULAR (ATP)', 'RESISTENCIA FÍSICA', 'OXIGENACIÓN SANGUÍNEA', 'RECUPERACIÓN RÁPIDA', 'VITALIDAD GENERAL', 'RENDIMIENTO ATLÉTICO', 'FUNCIÓN RESPIRATORIA', 'METABOLISMO ACTIVO', 'FATIGA (-)'],
+                    _metaPrice: '$70.000'
+                },
+                'CORE': { 
+                    label: 'PULSOR CORE', 
+                    desc: 'Respuesta inmune óptima', 
+                    spec: 'TURKEY TAIL', 
+                    id: 'PULS45C',
+                    img: 'img/45caps.png', imgBack: 'img/45turkey.png', imgRaw: 'img/turkeyRaw.png',
+                    telemetry: { DIM: '45 CAPS', MEDIA: 'MUSHROOM', DIAL: 'P.U.L.S.', RATE: '500MGRS' },
+                    benefits: ['RESPUESTA INMUNE', 'BIOMA INTESTINAL', 'DEFENSA CELULAR', 'ANTIOXIDANTE', 'SALUD DIGESTIVA', 'PROTECCIÓN SISTÉMICA', 'REDUCCIÓN INFLAMACIÓN', 'ESTABILIDAD INTERNA', 'SÍNTESIS NUTRITIVA', 'FORTALEZA INTEGRAL'],
+                    _metaPrice: '$70.000'
+                }
+            }
+        },
+        'BIOSTACK': {
+            defaultVariant: 'Z_BRICK',
+            variants: {
+                'Z_BRICK': { 
+                    label: 'BIOSTACK Z_BRICK', 
+                    desc: 'Matriz compacta de bioconstrucción y liberación nutricional masiva.', 
+                    spec: 'PURE MYCELIUM CORE', 
+                    id: 'BS-ZBRICK',
+                    img: 'img/brick-front.png', imgBack: 'img/brick-back.png', imgRaw: 'img/brick-raw.png',
+                    telemetry: { DIM: '1000 GR', MEDIA: 'BIOSTACK', DIAL: '⧗PHI', RATE: '100% PURE' },
+                    benefits: ['INTEGRACIÓN AMBIENTAL', 'ALTA DENSIDAD ADAPTÓGENA', 'BIOCONSTRUCCIÓN ACTIVA', 'REGENERACIÓN SISTÉMICA'],
+                    _metaPrice: '$180.000'
+                },
+                'ALPHA_STACK': { 
+                    label: 'ALPHA COGNITIVE STACK', 
+                    desc: 'Bloque biocinético optimizado para rendimiento ejecutivo y neuronal avanzada.', 
+                    spec: 'LION’S MANE FOCUS MATRIZ', 
+                    id: 'BS-ALPHA',
+                    img: 'img/alpha-front.png', imgBack: 'img/alpha-back.png', imgRaw: 'img/alpha-raw.png',
+                    telemetry: { DIM: '850 GR', MEDIA: 'BIOSTACK', DIAL: '⧗12:12', RATE: 'HIGH FOCUS' },
+                    benefits: ['POTENCIACIÓN SINÁPTICA', 'ENFOQUE EJECUTIVO', 'SÍNTESIS DE NGF', 'RESISTENCIA COGNITIVA'],
+                    _metaPrice: '$210.000'
+                },
+                'OMEGA_SHIELD': { 
+                    label: 'OMEGA IMMUNE STACK', 
+                    desc: 'Estructura de micelio denso para blindaje biológico celular profundo.', 
+                    spec: 'DEFENSE MULTI-MUSHROOM', 
+                    id: 'BS-OMEGA',
+                    img: 'img/omega-front.png', imgBack: 'img/omega-back.png', imgRaw: 'img/omega-raw.png',
+                    telemetry: { DIM: '1200 GR', MEDIA: 'BIOSTACK', DIAL: '⧗ULTRA', RATE: 'IMMUNE SHIELD' },
+                    benefits: ['PROTECCIÓN SISTÉMICA', 'RESPUESTA INMUNE ADAPTATIVA', 'BLINDAJE ANTE CORTISOL', 'DESINTOXICACIÓN CELULAR'],
+                    _metaPrice: '$220.000'
                 }
             }
         }
     };
 
+    // =========================================================================
+    // MUTABLE HUD STATE DEPENDENCIES (CHRONOLOGICAL PRESETS)
+    // =========================================================================
     let currentBioItem = 'PANEL';
     let currentBioVariant = '40X40';
     const numeroCelular = "573025333130";
@@ -514,7 +716,7 @@
         esp: {
             indicator: "ESP",
             secondaryTelemetry: "ONDA BIOCINÉTICA REGENERATIVA",
-            primaryTelemetry: "Compras tu pieza y financias otra para la comunidad",
+            primaryTelemetry: "Tu compra financia ondas a la comunidad",
             btnRevealRaw: "VER",
             btnActivar: "ACTIVAR"
         },
@@ -677,31 +879,34 @@
         }
     }
 
-    let tipoVarianteActiva = 'PANEL';
+let tipoVarianteActiva = 'PANEL'; // Mantiene compatibilidad con inicializaciones
 
     function inicializarArtepanel() {
-        const dynamicHolder = getCachedEl('menu-bio-DYNAMIC-holder');
-        const btnPrev = getCachedEl('btn-variant-prev');
-        const btnNext = getCachedEl('btn-variant-next');
+        const btnPrevFooter = getCachedEl('btn-variant-prev'); // Ahora cambia ÍTEMS (Menú)
+        const btnNextFooter = getCachedEl('btn-variant-next'); // Ahora cambia ÍTEMS (Menú)
+        const btnPrevHeader = getCachedEl('btn-header-variant-prev'); // Ahora cambia VARIANTES del Ítem
+        const btnNextHeader = getCachedEl('btn-header-variant-next'); // Ahora cambia VARIANTES del Ítem
         
-        if (dynamicHolder) {
-            const renderTextoCentral = () => {
-                dynamicHolder.innerHTML = `
-                    <span id="menu-bio-${tipoVarianteActiva}" class="tracking-[0.15em] transition-all duration-300 h-full w-full flex items-center justify-center font-bold text-jako-text/40 group-hover:text-jako-text">
-                        ${tipoVarianteActiva}
-                    </span>`;
-            };
-            dynamicHolder.addEventListener('click', () => {
-                tipoVarianteActiva = (tipoVarianteActiva === 'PANEL') ? 'STENCIL' : 'PANEL';
-                renderTextoCentral();
-                cambiarBioItem(tipoVarianteActiva);
-                triggerHaptic([10]);
-            });
-            renderTextoCentral();
-        }
+        // Obtener el array secuencial de categorías del ecosistema global
+        const itemsMenu = Object.keys(JAKO_CATALOG);
 
-        if (btnPrev) btnPrev.addEventListener('click', () => { ciclarVariante(tipoVarianteActiva, -1); triggerHaptic([6]); });
-        if (btnNext) btnNext.addEventListener('click', () => { ciclarVariante(tipoVarianteActiva, 1); triggerHaptic([6]); });
+        const ciclarItemMenu = (direccion) => {
+            let currentIndex = itemsMenu.indexOf(currentBioItem);
+            if (currentIndex === -1) currentIndex = 0;
+            let nextIndex = (currentIndex + direccion) % itemsMenu.length;
+            if (nextIndex < 0) nextIndex = itemsMenu.length - 1;
+
+            cambiarBioItem(itemsMenu[nextIndex]);
+            triggerHaptic([12]);
+        };
+
+        // Asignar control de Menú/Categorías a los botones inferiores (bloque telemetría)
+        if (btnPrevFooter) btnPrevFooter.addEventListener('click', () => ciclarItemMenu(-1));
+        if (btnNextFooter) btnNextFooter.addEventListener('click', () => ciclarItemMenu(1));
+
+        // Asignar control de Variantes específicas a los botones superiores del header
+        if (btnPrevHeader) btnPrevHeader.addEventListener('click', () => { ciclarVariante(currentBioItem, -1); triggerHaptic([6]); });
+        if (btnNextHeader) btnNextHeader.addEventListener('click', () => { ciclarVariante(currentBioItem, 1); triggerHaptic([6]); });
         
         vincularBotones();
         actualizarBioUI();
@@ -709,7 +914,7 @@
 
     function cambiarBioItem(itemKey) {
         currentBioItem = itemKey;
-        currentBioVariant = ARTEPANEL_CATALOG[itemKey].defaultVariant;
+        currentBioVariant = JAKO_CATALOG[itemKey].defaultVariant;
         actualizarBioUI();
         triggerHaptic(15);
     }
@@ -717,9 +922,9 @@
     function ciclarVariante(tipo, direccion) {
         if (currentBioItem !== tipo) {
             currentBioItem = tipo;
-            currentBioVariant = ARTEPANEL_CATALOG[tipo].defaultVariant;
+            currentBioVariant = JAKO_CATALOG[tipo].defaultVariant;
         }
-        const variantes = Object.keys(ARTEPANEL_CATALOG[tipo].variants);
+        const variantes = Object.keys(JAKO_CATALOG[tipo].variants);
         let currentIndex = variantes.indexOf(currentBioVariant);
         if (currentIndex === -1) currentIndex = 0;
         let nextIndex = (currentIndex + direccion) % variantes.length;
@@ -838,7 +1043,7 @@
     };
 
     function actualizarBioUI() {
-        const itemConfig = ARTEPANEL_CATALOG[currentBioItem];
+        const itemConfig = JAKO_CATALOG[currentBioItem];
         const variantConfig = itemConfig.variants[currentBioVariant];
         
         const descEl = getCachedEl('artepanel-description');
@@ -864,23 +1069,39 @@
         if (elDim) elDim.textContent = variantConfig.telemetry.DIM;
         if (elDial) elDial.textContent = variantConfig.telemetry.DIAL;
 
-        const textFluidClass = "text-[8px] xs:text-[9.5px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.35em] uppercase font-sans transition-all duration-300";
+        // --- PROCESAMIENTO LINGÜÍSTICO TRILÍNGÜE (MENÚ) ---
+        const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'esp';
+        const labelTextItem = (typeof VAULT_DICTIONARY !== 'undefined' && VAULT_DICTIONARY[activeLang])
+            ? (VAULT_DICTIONARY[activeLang][currentBioItem] || currentBioItem)
+            : currentBioItem;
 
-        Object.keys(ARTEPANEL_CATALOG).forEach(item => {
-            const el = getCachedEl(`menu-bio-${item}`);
-            if (el) {
-                const isSelected = (item === currentBioItem);
-                el.textContent = item;
-                el.className = isSelected 
-                    ? `cursor-pointer font-black h-8 px-4 flex items-center justify-center text-jako-bg bg-jako-text rounded border border-jako-text/20 shadow-[inset_0_1px_3px_rgba(255,255,255,0.25)] ${textFluidClass}` 
-                    : `cursor-pointer font-medium h-8 px-4 flex items-center justify-center text-jako-text/20 bg-transparent rounded hover:text-jako-text/50 hover:bg-jako-text/[0.02] ${textFluidClass}`;
-            }
-        });
+        // --- SANITIZACIÓN DE TEXTO PARA EVITAR REPETICIONES (Ej: PANEL40X40 -> 40X40) ---
+        // Limpia el prefijo "PANEL" solo si existe al inicio del label de la variante
+        const cleanedVariantLabel = variantConfig.label.replace(/^PANEL/, '');
+
+        // --- INYECCIÓN RESPONDIDAS CON ESTILO SEGURO ---
+        
+        // 1. Selector Superior de Items (Menú Global)
+        const holderFooter = getCachedEl('menu-bio-DYNAMIC-holder');
+        if (holderFooter) {
+            holderFooter.innerHTML = `
+                <span class="tracking-[0.25em] sm:tracking-[0.35em] uppercase font-sans text-[11px] font-black text-jako-text transition-all duration-300">
+                    ${labelTextItem}
+                </span>`;
+        }
+
+        // 2. Selector Inferior de Variantes (Matriz Central)
+        const holderHeader = getCachedEl('menu-bio-DYNAMIC-holder-header');
+        if (holderHeader) {
+            holderHeader.innerHTML = `
+                <span class="tracking-[0.25em] sm:tracking-[0.35em] uppercase font-sans text-[11px] font-black text-jako-text transition-all duration-300">
+                    ${cleanedVariantLabel}
+                </span>`;
+        }
     }
 
     function habilitarReveladoTelemetria() {
         const telemetryData = getCachedEl('panel-telemetry-data');
-        const txtOriginal = "Compras tu pieza y financias otra para la comunidad";
         let timerComercial = null;
 
         Object.keys(TELEMETRY_MEANINGS).forEach(id => {
@@ -888,9 +1109,15 @@
             if (!el || !telemetryData) return;
             el.addEventListener('click', () => {
                 clearTimeout(timerComercial);
+                
+                // Obtener texto original dinámico según idioma activo
+                const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'esp';
+                const txtOriginal = VAULT_DICTIONARY[activeLang]?.primaryTelemetry || "Tu compra financia ondas a la comunidad";
+
                 el.parentElement.classList.remove('text-jako-text/50');
                 el.parentElement.classList.add('text-jako-text');
                 telemetryData.innerHTML = TELEMETRY_MEANINGS[id];
+                
                 timerComercial = setTimeout(() => {
                     telemetryData.innerHTML = txtOriginal;
                     el.parentElement.classList.remove('text-jako-text');
@@ -900,7 +1127,6 @@
         });
 
         const telemetryDataSecondary = getCachedEl('panel-telemetry-data-secondary');
-        const txtOriginalSecondary = "ONDA BIOCINÉTICA REGENERATIVA";
         let timerQuantum = null;
 
         Object.keys(PULS_MEANINGS).forEach(id => {
@@ -912,6 +1138,10 @@
             el.addEventListener('click', () => {
                 clearTimeout(timerQuantum);
                 if (id === 'z-dial-trigger') window.isDialFrozen = true;
+
+                // Obtener texto secundario original dinámico según idioma activo
+                const activeLang = typeof currentLang !== 'undefined' ? currentLang : 'esp';
+                const txtOriginalSecondary = VAULT_DICTIONARY[activeLang]?.secondaryTelemetry || "ONDA BIOCINÉTICA REGENERATIVA";
 
                 // CONTROL SEGURO DE ESTADOS (Evitamos classList.replace inestable)
                 if (esHeaderPuro) {
@@ -947,7 +1177,7 @@
     }
 
     function adquirirNodo() {
-        const variantConfig = ARTEPANEL_CATALOG[currentBioItem].variants[currentBioVariant];
+        const variantConfig = JAKO_CATALOG[currentBioItem].variants[currentBioVariant];
         const currentCoord = getCachedEl('z-dial')?.textContent || "N/A";
         const currentSphere = calculateSphereIndex();
         const freqValue = getCachedEl('sub-sets-solar')?.textContent || "0.00";
@@ -1017,76 +1247,6 @@
         });
     }
 
-    // ========================================================
-    // PILAR 2: MOTOR DE ATMÓSFERA CROMÁTICA CÍCLICA (STB)
-    // ========================================================
-    const CHROMA_SPECTRUM = {
-        dark: {
-            STB: { label: 'STB', led: 'rgba(255, 255, 255, 0.65)', start: 'rgba(255, 255, 255, 0.03)', mid: 'rgba(5, 5, 8, 0.85)', end: '#000000' },
-            RED: { label: 'RED', led: 'rgba(239, 68, 68, 0.75)',   start: 'rgba(239, 68, 68, 0.06)',  mid: 'rgba(6, 2, 4, 0.92)',   end: '#020001' },
-            BLU: { label: 'BLU', led: 'rgba(59, 130, 246, 0.75)',  start: 'rgba(59, 130, 246, 0.06)', mid: 'rgba(2, 4, 10, 0.92)',  end: '#000103' },
-            YEL: { label: 'YEL', led: 'rgba(234, 179, 8, 0.75)',   start: 'rgba(234, 179, 8, 0.05)',  mid: 'rgba(6, 5, 2, 0.92)',   end: '#010100' },
-            GRN: { label: 'GRN', led: 'rgba(34, 197, 94, 0.75)',   start: 'rgba(34, 197, 94, 0.06)',  mid: 'rgba(2, 6, 3, 0.92)',   end: '#000201' },
-            ORN: { label: 'ORN', led: 'rgba(249, 115, 22, 0.75)',  start: 'rgba(249, 115, 22, 0.05)', mid: 'rgba(7, 4, 2, 0.92)',   end: '#020100' },
-            VIO: { label: 'VIO', led: 'rgba(168, 85, 247, 0.75)',  start: 'rgba(168, 85, 247, 0.06)', mid: 'rgba(5, 2, 8, 0.92)',   end: '#010002' }
-        },
-        white: {
-            STB: { label: 'STB', led: 'rgba(0, 0, 0, 0.75)',       start: 'rgba(0, 0, 0, 0.02)',      mid: 'rgba(248, 249, 250, 0.85)', end: '#ffffff' },
-            RED: { label: 'RED', led: 'rgba(220, 38, 38, 0.85)',   start: 'rgba(220, 38, 38, 0.04)',  mid: 'rgba(254, 242, 242, 0.85)', end: '#fff5f5' },
-            BLU: { label: 'BLU', led: 'rgba(25, 91, 212, 0.85)',   start: 'rgba(25, 91, 212, 0.04)',  mid: 'rgba(239, 246, 255, 0.85)', end: '#f0f7ff' },
-            YEL: { label: 'YEL', led: 'rgba(180, 120, 4, 0.85)',   start: 'rgba(180, 120, 4, 0.04)',  mid: 'rgba(254, 252, 232, 0.85)', end: '#fefefe' },
-            GRN: { label: 'GRN', led: 'rgba(22, 163, 74, 0.85)',   start: 'rgba(22, 163, 74, 0.04)',  mid: 'rgba(240, 253, 244, 0.85)', end: '#f5fff7' },
-            ORN: { label: 'ORN', led: 'rgba(217, 119, 6, 0.85)',   start: 'rgba(217, 119, 6, 0.04)',  mid: 'rgba(255, 247, 237, 0.85)', end: '#fffbf5' },
-            VIO: { label: 'VIO', led: 'rgba(147, 51, 234, 0.85)',  start: 'rgba(147, 51, 234, 0.04)', mid: 'rgba(250, 245, 255, 0.85)', end: '#faf5ff' }
-        }
-    };
-
-    const CHROMA_SEQUENCE = ['STB', 'RED', 'BLU', 'YEL', 'GRN', 'ORN', 'VIO'];
-    let currentChromaIndex = 0;
-
-    function inicializarSelectorCromaticoSTB() {
-        const triggerSTB = getCachedEl('footer-fn-left-trigger');
-        const indicatorSTB = getCachedEl('footer-chroma-indicator');
-        
-        if (!triggerSTB) return;
-
-        const aplicarEspectro = () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
-            const stateKey = CHROMA_SEQUENCE[currentChromaIndex];
-            const config = CHROMA_SPECTRUM[currentTheme][stateKey];
-
-            // 1. Mutación de variables lumínicas del HUD (Glow/Text Shadows)
-            document.documentElement.style.setProperty('--jako-led', config.led);
-            
-            // 2. Inyección de variables del gradiente trasero para mutar la atmósfera de fondo
-            document.documentElement.style.setProperty('--chroma-start', config.start);
-            document.documentElement.style.setProperty('--chroma-mid', config.mid);
-            document.documentElement.style.setProperty('--chroma-end', config.end);
-            
-            if (indicatorSTB) {
-                indicatorSTB.textContent = config.label;
-                indicatorSTB.style.color = 'var(--jako-text)';
-                setTimeout(() => { indicatorSTB.style.color = ''; }, 300);
-            }
-        };
-
-        triggerSTB.addEventListener('click', () => {
-            currentChromaIndex = (currentChromaIndex + 1) % CHROMA_SEQUENCE.length;
-            aplicarEspectro();
-            triggerHaptic([25]);
-        });
-
-        const acromaticTrigger = getCachedEl('acromatic-toggle-trigger');
-        if (acromaticTrigger) {
-            acromaticTrigger.addEventListener('click', () => {
-                setTimeout(aplicarEspectro, 50);
-            });
-        }
-
-        // Inicializar los valores por defecto del gradiente al cargar
-        aplicarEspectro();
-    }
-
     document.addEventListener('DOMContentLoaded', () => {
         inicializarAlternadorAcromatico();
         inicializarArtepanel();
@@ -1095,7 +1255,6 @@
         habilitarReveladoTelemetria();
         inicializarAlternadorIdioma();
         inicializarModoZenith();
-        inicializarSelectorCromaticoSTB();
 
         const laserSvg = getCachedEl('laser-vector-target');
         if (laserSvg) laserSvg.style.pointerEvents = 'none'; 
