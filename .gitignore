@@ -23,6 +23,7 @@ img/06/
 index2.html
 
 templates/
+bashes/
 
 astro.config.mjs
 package.json
@@ -38,6 +39,7 @@ docs/
 dist/
 src/
 node_modules/
+bashes/
 
 tailwind.config.mjs
 package.json
